@@ -17,7 +17,7 @@ def main(datasetName, encoding, filterbank, channel, bins, structure, quartile):
     ##### Dataset loading #####
     sourceFolder = '../../datasets/HumanActivityRecognition/datasetSonogram/'
     fileName = f'{sourceFolder}sonogram{datasetName}{filterbank}{channel}x{bins}{encoding}.bin'
-    trainData, trainLabel, testData, testLabel = datasetSplitting(fileName, 'CNN')
+    trainData, trainLabel, testData, testLabel, _ = datasetSplitting(fileName, 'CNN')
 
     ##### Load model network #####
     sourceFolder = '../../networkModels/HumanActivityRecognition/complete/'

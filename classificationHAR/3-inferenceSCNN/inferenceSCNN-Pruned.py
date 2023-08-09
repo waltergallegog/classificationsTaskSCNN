@@ -45,8 +45,6 @@ def main(datasetName, encoding, filterbank, channel, bins, structure, quartile):
     fileName = f'{sourceFolder}sonogram{datasetName}{filterbank}{channel}x{bins}{encoding}.bin'
     trainData, trainLabel, testData, testLabel, datasetClass = datasetSplitting(fileName, 'SNN')
 
-    trainData, trainLabel, testData, testLabel = trainData[0:3], trainLabel[0:3], testData[0:3], testLabel[0:3]
-
     timeStimulus = {'duration': 1000.0, 'silence': 20.0}
 
     dataset = Dataset(
