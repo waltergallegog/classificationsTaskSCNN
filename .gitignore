@@ -1,8 +1,10 @@
 .idea
 nohup*
-
+__pycache__/
 
 bibliography
+
+remoteConda
 
 
 classificationFSD/4-analyses
@@ -35,4 +37,3 @@ networkPerformance/HumanActivityRecognition/*.csv
 
 zzzzzkeyPerformanceIndicators
 
-remoteConda

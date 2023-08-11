@@ -15,18 +15,18 @@ def main(datasetName, encoding, filterbank, channel, bins, structure):
     ##### Dataset loading #####
     sourceFolder = '../../datasets/HumanActivityRecognition/datasetSonogram/'
     fileName = f'{sourceFolder}sonogram{datasetName}{filterbank}{channel}x{bins}{encoding}.bin'
-    trainData, trainLabel, testData, testLabel, _ = datasetSplitting(fileName, 'CNN')
+    trainData, trainLabel, testData, testLabel, datasetClass = datasetSplitting(fileName, 'CNN')
 
     ##### Model definitions #####
     dataShape = trainData.shape[1:]
-    modelCNN = netModelsComplete(structure, dataShape)
+    modelCNN = netModelsComplete(structure, dataShape, datasetClass)
 
     # model summary
     # modelCNN.summary()
 
     modelCNN.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    accuracyTrain = modelCNN.fit(x=trainData, y=trainLabel, validation_split=0.1, epochs=10, batch_size=20, verbose=0)
+    accuracyTrain = modelCNN.fit(x=trainData, y=trainLabel, validation_split=0.1, epochs=30, batch_size=1, verbose=0)
     accuracyTest = modelCNN.evaluate(x=testData, y=testLabel, verbose=0)
 
     return accuracyTrain.history['accuracy'][-1], accuracyTest[-1], modelCNN

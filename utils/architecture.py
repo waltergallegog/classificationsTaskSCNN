@@ -15,7 +15,7 @@ def Relu(inputs):
     return tfLocal.multiply(S*tau_syn, tfLocal.math.maximum(0.0, inputs))
 
 
-def netModelsComplete(structure, dataShape):
+def netModelsComplete(structure, dataShape, datasetClass):
     modelCNN = None
     if structure == 'c06c12f2':
         modelCNN = tfLocal.keras.models.Sequential([
@@ -25,7 +25,7 @@ def netModelsComplete(structure, dataShape):
             tfLocal.keras.layers.AveragePooling2D(pool_size=(2, 2), padding='valid'),
             tfLocal.keras.layers.Flatten(),
             tfLocal.keras.layers.Dense(units=768, activation='relu', use_bias=False),
-            tfLocal.keras.layers.Dense(units=10, activation='softmax', use_bias=False)
+            tfLocal.keras.layers.Dense(units=datasetClass, activation='softmax', use_bias=False)
         ])
     elif structure == 'c12c24f2':
         modelCNN = tfLocal.keras.models.Sequential([
@@ -35,7 +35,7 @@ def netModelsComplete(structure, dataShape):
             tfLocal.keras.layers.AveragePooling2D(pool_size=(2, 2), padding='valid'),
             tfLocal.keras.layers.Flatten(),
             tfLocal.keras.layers.Dense(units=768, activation='relu', use_bias=False),
-            tfLocal.keras.layers.Dense(units=10, activation='softmax', use_bias=False)
+            tfLocal.keras.layers.Dense(units=datasetClass, activation='softmax', use_bias=False)
         ])
     else:
         raise Exception('Inserted structure not available')
@@ -43,7 +43,7 @@ def netModelsComplete(structure, dataShape):
     return modelCNN
 
 
-def netModelsPruned(structure, dataShape, mask):
+def netModelsPruned(structure, dataShape, mask, datasetClass):
     modelCNN = None
     if structure == 'c06c12f2':
         modelCNN = tfLocal.keras.models.Sequential([
@@ -53,7 +53,7 @@ def netModelsPruned(structure, dataShape, mask):
             tfLocal.keras.layers.AveragePooling2D(pool_size=(2, 2), padding='valid'),
             tfLocal.keras.layers.Flatten(),
             tfLocal.keras.layers.Dense(units=768, activation='relu', use_bias=False, kernel_constraint=Masking(mask[2])),
-            tfLocal.keras.layers.Dense(units=10, activation='softmax', use_bias=False, kernel_constraint=Masking(mask[3]))
+            tfLocal.keras.layers.Dense(units=datasetClass, activation='softmax', use_bias=False, kernel_constraint=Masking(mask[3]))
         ])
     elif structure == 'c12c24f2':
         modelCNN = tfLocal.keras.models.Sequential([
@@ -63,7 +63,7 @@ def netModelsPruned(structure, dataShape, mask):
             tfLocal.keras.layers.AveragePooling2D(pool_size=(2, 2), padding='valid'),
             tfLocal.keras.layers.Flatten(),
             tfLocal.keras.layers.Dense(units=768, activation='relu', use_bias=False, kernel_constraint=Masking(mask[2])),
-            tfLocal.keras.layers.Dense(units=10, activation='softmax', use_bias=False, kernel_constraint=Masking(mask[3]))
+            tfLocal.keras.layers.Dense(units=datasetClass, activation='softmax', use_bias=False, kernel_constraint=Masking(mask[3]))
         ])
     else:
         raise Exception('Inserted structure not available')

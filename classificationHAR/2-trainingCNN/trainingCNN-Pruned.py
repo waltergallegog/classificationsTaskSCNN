@@ -17,7 +17,7 @@ def main(datasetName, encoding, filterbank, channel, bins, structure, quartile):
     ##### Dataset loading #####
     sourceFolder = '../../datasets/HumanActivityRecognition/datasetSonogram/'
     fileName = f'{sourceFolder}sonogram{datasetName}{filterbank}{channel}x{bins}{encoding}.bin'
-    trainData, trainLabel, testData, testLabel, _ = datasetSplitting(fileName, 'CNN')
+    trainData, trainLabel, testData, testLabel, datasetClass = datasetSplitting(fileName, 'CNN')
 
     ##### Load model network #####
     sourceFolder = '../../networkModels/HumanActivityRecognition/complete/'
@@ -39,14 +39,14 @@ def main(datasetName, encoding, filterbank, channel, bins, structure, quartile):
     ##### Model definitions #####
     synapses = np.sum([np.sum(m) for m in mask], dtype=int)
     dataShape = trainData.shape[1:]
-    modelCNNPruned = netModelsPruned(structure, dataShape, mask)
+    modelCNNPruned = netModelsPruned(structure, dataShape, mask, datasetClass)
 
     # model summary
     # modelCNNPruned.summary()
     modelCNNPruned.set_weights(layersWeigths)
     modelCNNPruned.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-    accuracyTrain = modelCNNPruned.fit(x=trainData, y=trainLabel, validation_split=0.1, epochs=4, batch_size=20, verbose=0)
+    accuracyTrain = modelCNNPruned.fit(x=trainData, y=trainLabel, validation_split=0.1, epochs=10, batch_size=1, verbose=0)
     accuracyTest = modelCNNPruned.evaluate(x=testData, y=testLabel, verbose=0)
 
     return accuracyTrain.history['accuracy'][-1], accuracyTest[-1], synapses, modelCNNPruned
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument('-n', '--datasetName', help='Dataset file name', type=str, default='subset1')
-    parser.add_argument('-e', '--encoding', help='Encoding algorithm selected', type=str, default='RATE')
+    parser.add_argument('-e', '--encoding', help='Encoding algorithm selected', type=str, default='TBR')
     parser.add_argument('-f', '--filterbank', help='Type of filterbank', type=str, default='butterworth')
     parser.add_argument('-c', '--channel', help='Frequency decomposition channels', type=int, default=4)
     parser.add_argument('-b', '--bins', help='Binning width', type=int, default=24)

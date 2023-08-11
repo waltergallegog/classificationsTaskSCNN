@@ -30,7 +30,7 @@ chmod 777 Miniconda3-py38_4.10.3-Linux-x86_64.sh
 To create the virtual environment and install all the necessary packages, run the commands:
 ```
 chmod +x installViaConda.sh
-./installViaConda
+./installViaConda.sh
 ```
 
 
