@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../../')
 import os
-from utils.graphicalUtility import *
+from utils import progressBar
 
 ##############################
 # ##### Spike encoding ##### #

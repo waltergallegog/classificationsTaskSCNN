@@ -1,12 +1,12 @@
 import sys
 sys.path.append('../../')
 import argparse
-from utils.graphicalUtility import *
-from utils.dataStandardization import *
+from utils import progressBar
+from utils import DataDevice
 import numpy as np
 from scipy.signal import butter, gammatone
 from scipy.signal.windows import *
-from utils.dataEncoding import *
+from utils import RateCoding, TemporalContrast, FilterOptimizer, GlobalReferenced
 import pickle
 
 

@@ -1,12 +1,10 @@
 import sys
 sys.path.append('../../')
 import argparse
-from utils.netUtility import *
-from utils.dataStandardization import *
+from utils import datasetSplitting
+from utils import Dataset
 import tensorflow as tf
-from utils.architecture import *
-from utils.conversionCNN import *
-from utils.conversionSCNN import *
+from utils import CNN, SNN, Relu, Masking
 import numpy as np
 import pandas as pd
 

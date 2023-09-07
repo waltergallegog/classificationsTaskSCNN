@@ -1,6 +1,6 @@
 .idea
 nohup*
-__pycache__/
+*__pycache__*
 
 bibliography
 
@@ -36,4 +36,3 @@ networkPerformance/HumanActivityRecognition/*.csv
 
 
 zzzzzkeyPerformanceIndicators
-

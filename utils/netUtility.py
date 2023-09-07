@@ -1,18 +1,18 @@
-import pickle as pickleLocal
-from random import shuffle as shuffleLocal
-import numpy as npLocal
+import pickle
+from random import shuffle
+import numpy as np
 
 def datasetSplitting(fileName, netType):
 
     file = open(fileName, 'rb')
-    sonogramSet = pickleLocal.load(file)
+    sonogramSet = pickle.load(file)
     file.close()
 
     datasetClass = sonogramSet[-1][-1]+1
 
     classNum = sonogramSet[-1][-1]+1
     sampleNum = int(len(sonogramSet)/classNum)
-    splitTrain, splitTest = int(npLocal.floor(sampleNum*0.8)), int(npLocal.ceil(sampleNum*0.2))
+    splitTrain, splitTest = int(np.floor(sampleNum*0.8)), int(np.ceil(sampleNum*0.2))
 
     ##### Data preprocessing #####
     trainSet = []
@@ -24,24 +24,24 @@ def datasetSplitting(fileName, netType):
         tmp = sonogramSet[splitTest+sampleNum*digit:sampleNum+sampleNum*digit]
         for sample in tmp:
             trainSet.append(sample)
-    shuffleLocal(trainSet)
-    shuffleLocal(testSet)
+    shuffle(trainSet)
+    shuffle(testSet)
 
     trainData = []
     trainLabel = []
     for data, label in trainSet:
         trainData.append([data])
         trainLabel.append(label)
-    trainData = npLocal.vstack(trainData)
-    trainLabel = npLocal.array(trainLabel)
+    trainData = np.vstack(trainData)
+    trainLabel = np.array(trainLabel)
 
     testData = []
     testLabel = []
     for data, label in testSet:
         testData.append([data])
         testLabel.append(label)
-    testData = npLocal.vstack(testData)
-    testLabel = npLocal.array(testLabel)
+    testData = np.vstack(testData)
+    testLabel = np.array(testLabel)
 
     if netType == 'CNN':
         trainData = trainData/trainData.max()

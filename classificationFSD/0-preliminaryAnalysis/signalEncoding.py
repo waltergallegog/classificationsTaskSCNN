@@ -1,11 +1,11 @@
 import sys
 sys.path.append('../../')
-from utils.dataStandardization import *
+from utils import DataAudio
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import butter, gammatone, freqz
-from utils.dataEncoding import *
-from utils.dataEncodingPerformance import *
+from utils import TemporalContrast, FilterOptimizer, GlobalReferenced
+from utils import spikeEfficiency, rmse
 from scipy.signal.windows import *
 
 ######################################
@@ -160,7 +160,7 @@ plt.legend(label_encoding)
 plt.subplot(2, 1, 2)
 plt.title('Efficiency')
 for index in range(index_encoding):
-    efficiency = spike_efficiency(spike[index])
+    efficiency = spikeEfficiency(spike[index])
     plt.plot(efficiency, '-o')
 plt.xlabel('Channel')
 plt.ylabel('Efficiency')

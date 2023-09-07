@@ -1,5 +1,5 @@
-from copy import deepcopy as deepcopyLocal
-import numpy as npLocal
+from copy import deepcopy
+import numpy as np
 
 
 def rmse(data_row, data_prediction):
@@ -7,13 +7,13 @@ def rmse(data_row, data_prediction):
     if len(data_row) == len(data_prediction):
         data = list(zip(data_row, data_prediction))
         for row, prediction in data:
-            error.append(npLocal.sqrt(npLocal.square(npLocal.subtract(row, prediction)).mean()))
+            error.append(np.sqrt(np.square(np.subtract(row, prediction)).mean()))
     return error
 
 
-def spike_efficiency(data):
-    channels = deepcopyLocal(data)
+def spikeEfficiency(data):
+    channels = deepcopy(data)
     efficiency = []
     for channel in channels:
-        efficiency.append(1 - (npLocal.sum(npLocal.abs(channel)) / channel.shape[0]))
+        efficiency.append(1 - (np.sum(np.abs(channel)) / channel.shape[0]))
     return efficiency

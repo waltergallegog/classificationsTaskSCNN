@@ -1,12 +1,12 @@
 import pyNN.nest as pynn
-import numpy as npLocal
+import numpy as np
 
 
 def synapse_filtering(weight, data_filtering):
     skip = False
     intervalValues = data_filtering['boxplot_data']
     codes = data_filtering['filter_code']
-    i = npLocal.searchsorted(intervalValues, weight, side='right')
+    i = np.searchsorted(intervalValues, weight, side='right')
     if codes[i] == 1:
         skip = True
     return skip
@@ -65,7 +65,7 @@ class SNN:
                                         weight = kernel_weights[kernel_row, kernel_col]
 
                                         data_filtering = {'boxplot_data': data_boxplot, 'filter_code': filter_code}
-                                        skip = synapse_filtering(npLocal.abs(weight), data_filtering)
+                                        skip = synapse_filtering(np.abs(weight), data_filtering)
 
                                         index_receptive_field = col + kernel_col + (row + kernel_row) * input_data_col
                                         if weight > 0 and not skip:
@@ -135,7 +135,7 @@ class SNN:
                             weight = weights[output, input]
 
                             data_filtering = {'boxplot_data': data_boxplot, 'filter_code': filter_code}
-                            skip = synapse_filtering(npLocal.abs(weight), data_filtering)
+                            skip = synapse_filtering(np.abs(weight), data_filtering)
 
                             if weight > 0 and not skip:
                                 synapse_excit.append((input, output, weight, 1.0))
@@ -161,7 +161,7 @@ class SNN:
                                 weight = weights[output, input]
 
                                 data_filtering = {'boxplot_data': data_boxplot, 'filter_code': filter_code}
-                                skip = synapse_filtering(npLocal.abs(weight), data_filtering)
+                                skip = synapse_filtering(np.abs(weight), data_filtering)
 
                                 if weight > 0 and not skip:
                                     synapse_excit.append((input, output, weight, 1.0))

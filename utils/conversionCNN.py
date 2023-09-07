@@ -1,5 +1,5 @@
-import numpy as npLocal
-import matplotlib.pyplot as pltLocal
+import numpy as np
+import matplotlib.pyplot as plt
 
 ##########################
 # CNN feature extraction #
@@ -28,7 +28,7 @@ class CNN:
                 dimension_map = int(input_neuron / number_filters)  # dimension of single feature map
 
                 dense_weights = self.layers[-1].weights
-                tmp = npLocal.zeros((output_neuron, input_neuron))
+                tmp = np.zeros((output_neuron, input_neuron))
 
                 for feature_map in range(number_filters):
                     for cell in range(dimension_map):
@@ -55,7 +55,7 @@ class Layer:
             for index_filter in range(self.filters):
                 tmp = []
                 for index_input in range(self.input_map):
-                    tmp.append(npLocal.array(tmp_weights[:, :, index_input, index_filter]))
+                    tmp.append(np.array(tmp_weights[:, :, index_input, index_filter]))
                 self.weights.append(tmp)
             self.boxplot = boxplot_data_extraction(tmp_weights)
 
@@ -63,7 +63,7 @@ class Layer:
             self.type = 'pool2d'  # type of layer
 
             self.pool_size = layer.pool_size
-            self.weights = npLocal.ones(self.pool_size) * 1 / (self.pool_size[0] * self.pool_size[1])
+            self.weights = np.ones(self.pool_size) * 1 / (self.pool_size[0] * self.pool_size[1])
         elif 'dense' in layer_type:
             self.type = 'dense'  # type of layer
 
@@ -74,12 +74,12 @@ class Layer:
 
             # get weigths layer
             tmp_weights = layer.get_weights()[0]
-            self.weights = npLocal.transpose(tmp_weights)
+            self.weights = np.transpose(tmp_weights)
             self.boxplot = boxplot_data_extraction(tmp_weights)
 
 
 def boxplot_data_extraction(weights):
-    boxplot_data = pltLocal.boxplot(npLocal.abs(weights.flatten()))
+    boxplot_data = plt.boxplot(np.abs(weights.flatten()))
     whisker_lower = boxplot_data['whiskers'][0].get_ydata()[1]
     quartile_lower = boxplot_data['boxes'][0].get_ydata()[1]
     median = boxplot_data['medians'][0].get_ydata()[1]

@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../../')
-from utils.dataStandardization import *
+from utils import DataAudio
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import butter, gammatone, freqz

@@ -1,9 +1,9 @@
 import sys
 sys.path.append('../../')
 import argparse
-from utils.graphicalUtility import *
-from utils.netUtility import *
-from utils.architecture import *
+from utils import progressBar
+from utils import datasetSplitting
+from utils import netModelsPruned, Relu
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument('-n', '--datasetName', help='Dataset file name', type=str, default='subset1')
-    parser.add_argument('-e', '--encoding', help='Encoding algorithm selected', type=str, default='TBR')
+    parser.add_argument('-e', '--encoding', help='Encoding algorithm selected', type=str, default='RATE')
     parser.add_argument('-f', '--filterbank', help='Type of filterbank', type=str, default='butterworth')
     parser.add_argument('-c', '--channel', help='Frequency decomposition channels', type=int, default=4)
     parser.add_argument('-b', '--bins', help='Binning width', type=int, default=24)

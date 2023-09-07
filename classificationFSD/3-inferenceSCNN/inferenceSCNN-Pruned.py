@@ -1,12 +1,10 @@
 import sys
 sys.path.append('../../')
 import argparse
-from utils.netUtility import *
-from utils.dataStandardization import *
+from utils import datasetSplitting
+from utils import Dataset
 import tensorflow as tf
-from utils.architecture import *
-from utils.conversionCNN import *
-from utils.conversionSCNN import *
+from utils import CNN, SNN, Relu, Masking
 import numpy as np
 import pandas as pd
 
@@ -105,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--channel', help='Frequency decomposition channels', type=int, default=32)
     parser.add_argument('-b', '--bins', help='Binning width', type=int, default=50)
     parser.add_argument('-s', '--structure', help='Network structure', type=str, default='c06c12f2')
-    parser.add_argument('-q', '--quartile', help='Quartile pruning', type=str, default='upper')
+    parser.add_argument('-q', '--quartile', help='Quartile pruning', type=str, default='median')
 
     argument = parser.parse_args()
 

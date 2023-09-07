@@ -1,12 +1,12 @@
-import warnings as warningsLocal
-from scipy.io.wavfile import read as readLocal
-import numpy as npLocal
-from scipy.signal import lfilter as lfilterLocal
-import math as mathLocal
-import random as randomLocal
-import matplotlib.pyplot as pltLocal
+import warnings
+from scipy.io.wavfile import read
+import numpy as np
+from scipy.signal import lfilter
+import math
+import random
+import matplotlib.pyplot as plt
 
-warningsLocal.filterwarnings('ignore', message='.*Chunk.*')
+warnings.filterwarnings('ignore', message='.*Chunk.*')
 
 
 ############################################################
@@ -17,25 +17,25 @@ class DataAudio:
     def __init__(self, sample, channels):
         self.name = sample.split('/')[-1].replace('.wav', '')
 
-        fs, data = readLocal(sample)
+        fs, data = read(sample)
 
         if len(data.shape) > 1:
             data = data.sum(axis=1)
 
         self.data = data
         self.fs = fs
-        self.freqRange = (20, npLocal.floor(self.fs/2))
+        self.freqRange = (20, np.floor(self.fs/2))
 
         freqMin, freqMax = self.freqRange
-        octave = (channels-0.5)*npLocal.log10(2)/npLocal.log10(freqMax/freqMin)
-        self.freqCentr = npLocal.array([freqMin*(2**(ch/octave)) for ch in range(channels)])
-        self.freqPoles = npLocal.array([(freq*(2**(-1/(2*octave))), (freq*(2**(1/(2*octave))))) for freq in self.freqCentr])
+        octave = (channels-0.5)*np.log10(2)/np.log10(freqMax/freqMin)
+        self.freqCentr = np.array([freqMin*(2**(ch/octave)) for ch in range(channels)])
+        self.freqPoles = np.array([(freq*(2**(-1/(2*octave))), (freq*(2**(1/(2*octave))))) for freq in self.freqCentr])
         self.freqPoles[-1, 1] = fs/2*0.99999
 
     def decomposition(self, filterbank):
         self.components = []
         for num, den in filterbank:
-            self.components.append(lfilterLocal(num, den, self.data))
+            self.components.append(lfilter(num, den, self.data))
 
 
 ##### Dataset standardization for device sample #####
@@ -47,12 +47,12 @@ class DataDevice:
             [self.data.append(axis) for axis in sample[key]]
 
         self.fs = fs
-        self.freqRange = (0.5, npLocal.floor(self.fs/2))
+        self.freqRange = (0.5, np.floor(self.fs/2))
 
         freqMin, freqMax = self.freqRange
-        octave = (channels-0.5)*npLocal.log10(2)/npLocal.log10(freqMax/freqMin)
-        self.freqCentr = npLocal.array([freqMin*(2**(ch/octave)) for ch in range(channels)])
-        self.freqPoles = npLocal.array([(freq*(2**(-1/(2*octave))), (freq*(2**(1/(2*octave))))) for freq in self.freqCentr])
+        octave = (channels-0.5)*np.log10(2)/np.log10(freqMax/freqMin)
+        self.freqCentr = np.array([freqMin*(2**(ch/octave)) for ch in range(channels)])
+        self.freqPoles = np.array([(freq*(2**(-1/(2*octave))), (freq*(2**(1/(2*octave))))) for freq in self.freqCentr])
         self.freqPoles[-1, 1] = fs/2*0.99999
 
     def decomposition(self, filterbank):
@@ -60,8 +60,8 @@ class DataDevice:
         for dataAxis in self.data:
             # tmp = []
             for num, den in filterbank:
-                # tmp.append(lfilterLocal(num, den, dataAxis))
-                self.components.append(lfilterLocal(num, den, dataAxis))
+                # tmp.append(lfilter(num, den, dataAxis))
+                self.components.append(lfilter(num, den, dataAxis))
             # self.components.append(tmp)
 
 
@@ -88,18 +88,18 @@ class Dataset:
         self.spikeTrainSet = []
         samples = dataset['trainSet'][1].shape[0]
         for cell in range(cells):
-            tmp = npLocal.array([])
+            tmp = np.array([])
             for sample in range(samples):
-                tmp = npLocal.concatenate((tmp, self.trainSet[sample].spikeTrain[cell]+((timeStimulus['duration']+timeStimulus['silence'])*npLocal.array(sample))))
+                tmp = np.concatenate((tmp, self.trainSet[sample].spikeTrain[cell]+((timeStimulus['duration']+timeStimulus['silence'])*np.array(sample))))
             self.spikeTrainSet.append(tmp)
 
         # creating a unique variable for spike train with source from test set
         self.spikeTestSet = []
         samples = dataset['testSet'][1].shape[0]
         for cell in range(cells):
-            tmp = npLocal.array([])
+            tmp = np.array([])
             for sample in range(samples):
-                tmp = npLocal.concatenate((tmp, self.testSet[sample].spikeTrain[cell]+((timeStimulus['duration']+timeStimulus['silence'])*npLocal.array(sample))))
+                tmp = np.concatenate((tmp, self.testSet[sample].spikeTrain[cell]+((timeStimulus['duration']+timeStimulus['silence'])*np.array(sample))))
             self.spikeTestSet.append(tmp)
 
 
@@ -113,7 +113,7 @@ class SampleEncoding:
 
         # spike generation
         if encoding == 'poisson':
-            randomLocal.seed(0)
+            random.seed(0)
 
             self.spikeTrain = []
 
@@ -122,29 +122,29 @@ class SampleEncoding:
                 for col in range(cols):
                     rate = self.data[row, col]  # intensity data in cell
                     if rate == 0:
-                        self.spikeTrain.append(npLocal.array([]))  # no stimulus
+                        self.spikeTrain.append(np.array([]))  # no stimulus
                     else:
                         spikeSequence = []
-                        poissonISI = -mathLocal.log(1.0-randomLocal.random())/rate*1000.0  # ms tau
+                        poissonISI = -math.log(1.0-random.random())/rate*1000.0  # ms tau
                         spikeTime = poissonISI
                         while spikeTime < timeStimulus['duration']:
                             spikeSequence.append(spikeTime)
-                            poissonISI = -mathLocal.log(1.0-randomLocal.random())/rate*1000.0  # ms tau
+                            poissonISI = -math.log(1.0-random.random())/rate*1000.0  # ms tau
                             spikeTime += poissonISI
-                        self.spikeTrain.append(npLocal.array(spikeSequence))
+                        self.spikeTrain.append(np.array(spikeSequence))
 
     ##### Plot sample #####
     def plotSample(self):
-        pltLocal.title('TBR')
-        pltLocal.imshow(self.data[:, :], cmap='viridis')
-        pltLocal.xlabel('Bins')
-        pltLocal.ylabel('Channels')
-        pltLocal.show()
+        plt.title('TBR')
+        plt.imshow(self.data[:, :], cmap='viridis')
+        plt.xlabel('Bins')
+        plt.ylabel('Channels')
+        plt.show()
 
     ##### Plot spike train #####
     def plotSpikeTrain(self):
-        pltLocal.title('TBR')
-        pltLocal.eventplot(self.spikeTrain)
-        pltLocal.xlabel('Time')
-        pltLocal.ylabel('Pixel')
-        pltLocal.show()
+        plt.title('TBR')
+        plt.eventplot(self.spikeTrain)
+        plt.xlabel('Time')
+        plt.ylabel('Pixel')
+        plt.show()
