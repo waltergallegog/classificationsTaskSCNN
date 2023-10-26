@@ -120,7 +120,7 @@ def main(filterbank, channel):
     return 0
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument('-f', '--filterbank', help='Type of filterbank', type=str, default='butterworth')

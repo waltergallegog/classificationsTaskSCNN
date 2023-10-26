@@ -22,7 +22,6 @@ plt.plot(time, sample.data)
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.tight_layout()
-plt.show()
 
 
 ###########################

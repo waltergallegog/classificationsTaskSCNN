@@ -14,21 +14,27 @@ Once the best performing techniques were identified, I decided to conduct furthe
 ### Reference
 The reference material used to develop the research is obtained from:
 
-- Riccardo Pignari, Gianvito Urgese, Vittorio Fra, Evelina Forno. "Impact of Encoding Techniques on the Classification of Raw Time-Variant Signals with Spiking Neural Networks" https://webthesis.biblio.polito.it/22859/ 
+- Riccardo Pignari, Gianvito Urgese, Vittorio Fra, Evelina Forno. "Impact of Encoding Techniques on the Classification of Raw Time-Variant Signals with Spiking Neural Networks" https://webthesis.biblio.polito.it/22859/
+- Forno, E., Fra, V., Pignari, R., Macii, E., & Urgese, G. (2022). Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task. Frontiers in Neuroscience, 16, 999029. https://www.frontiersin.org/articles/10.3389/fnins.2022.999029/full
 
 
 ## Virtual environment configuration
 
 The project makes use of the virtual environment creator conda.
 
+Clone git repo:
+```
+git clone https://github.com/riccardopignari/classificationsTaskSCNN.git
+```
 Conda installation:
 ```
 wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-Linux-x86_64.sh
-chmod 777 Miniconda3-py38_4.10.3-Linux-x86_64.sh
+chmod +x Miniconda3-py38_4.10.3-Linux-x86_64.sh
 ./Miniconda3-py38_4.10.3-Linux-x86_64.sh
 ```
 To create the virtual environment and install all the necessary packages, run the commands:
 ```
+cd classificationsTaskSCNN
 chmod +x installViaConda.sh
 ./installViaConda.sh
 ```

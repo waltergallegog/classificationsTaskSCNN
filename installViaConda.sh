@@ -23,12 +23,8 @@ if $flagConda
 then
     # Installing new enviroment via CONDA
     source /home/$USER/miniconda3/etc/profile.d/conda.sh
-    conda create --name nest python=3.9.16
+    conda create --name nest --file fullRequirements
     conda activate nest
-    
-    # Installing package via CONDA
-    conda install pip
-    conda install -c conda-forge nest-simulator==2.20.1
     
     # Installing package via PIP
     pip install pynn==0.9.6

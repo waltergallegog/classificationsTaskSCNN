@@ -4,7 +4,7 @@ from utils import DataAudio
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import butter, gammatone, freqz
-from utils import TemporalContrast, FilterOptimizer, GlobalReferenced
+from utils import RateCoding, TemporalContrast, FilterOptimizer, GlobalReferenced
 from utils import spikeEfficiency, rmse
 from scipy.signal.windows import *
 
@@ -56,6 +56,14 @@ plt.ylabel('Gain')
 label_encoding = []
 spike = []
 recos = []
+
+##### Rate #####
+spike_train = RateCoding(sample)
+setting = {}
+spike_train.RATE(setting)
+label_encoding.append('RATE')
+spike.append(spike_train.RATE_spike)
+recos.append(spike_train.RATE_recos)
 
 ##### Temporal Contrast #####
 spike_train = TemporalContrast(sample)
