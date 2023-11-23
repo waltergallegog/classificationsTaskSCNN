@@ -35,16 +35,19 @@ class DataInitializing:
 
 
 class RateCoding(DataInitializing):
-    def RATE(self, setting):
+    def RATE(self, setting):  # Poisson rate
         self.RATE_spike = []
         self.RATE_recos = []
         data = deepcopy(self.data)
         random.seed(0)
-        time_stimulus = 1
+        TIME_STIMULUS = 1
         channels = range(len(data))
         for channel in channels:
             signal = data[channel]
             tmp = []
+
+            # we are generating an array of spike times for each channel
+            # Sparse representation
             for i in range(len(signal)):
                 rate = signal[i]
                 if rate == 0 or rate < 0:
@@ -53,17 +56,20 @@ class RateCoding(DataInitializing):
                     spike_sequence = []
                     poisson_isi = -math.log(1.0 - random.random()) / rate * 1000.0  # ms tau
                     spike_time = poisson_isi
-                    while spike_time < time_stimulus:
+                    while spike_time < TIME_STIMULUS:
                         spike_sequence.append(spike_time)
                         poisson_isi = -math.log(1.0 - random.random()) / rate * 1000.0  # ms tau
                         spike_time += poisson_isi
                     tmp.append(np.array(spike_sequence))
+
+            # convert them from spike times to spike trains
+            # explicit representation
             spike_time = []
             for i in range(len(tmp)):
-                scaled = np.array(tmp[i]) + time_stimulus * i
+                scaled = np.array(tmp[i]) + TIME_STIMULUS * i
                 for t in scaled:
                     spike_time.append(int(t))
-            tmp = np.zeros(int(time_stimulus) * len(signal))
+            tmp = np.zeros(int(TIME_STIMULUS) * len(signal))
             for i in spike_time:
                 tmp[i] = 1
             self.RATE_spike.append(tmp)
@@ -131,7 +137,7 @@ class TemporalContrast(DataInitializing):
         self.SF_recos = []
         data = deepcopy(self.data)
 
-        threshold = setting['sf_thresholds']
+        THRESHOLD = setting['sf_thresholds']
 
         t_spike = np.infty
         channels = range(len(data))
@@ -141,13 +147,13 @@ class TemporalContrast(DataInitializing):
             tmp_spike = np.zeros(length_array, dtype=int)
             tmp_recos = np.zeros(length_array)
             for index in range(length_array):
-                if data[channel][index] > base + threshold and t_spike > self.refra_t:
+                if data[channel][index] > base + THRESHOLD and t_spike > self.refra_t:
                     tmp_spike[index] = 1
-                    base += threshold
+                    base += THRESHOLD
                     t_spike = 0
-                elif data[channel][index] < base - threshold and t_spike > self.refra_t:
+                elif data[channel][index] < base - THRESHOLD and t_spike > self.refra_t:
                     tmp_spike[index] = -1
-                    base -= threshold
+                    base -= THRESHOLD
                     t_spike = 0
                 else:
                     tmp_spike[index] = 0

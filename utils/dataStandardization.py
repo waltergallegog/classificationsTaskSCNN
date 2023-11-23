@@ -24,13 +24,34 @@ class DataAudio:
 
         self.data = data
         self.fs = fs
+
+        print(f'Sample: {self.name}')
+        print(f'Channels: {channels}')
+        print(f'Frequency sampling: {self.fs} Hz')
+
+        # The human hearable range is from 20 - 20K Hz.
+        # We calculate the range as [20, 1/2 sampling freq]
         self.freqRange = (20, np.floor(self.fs/2))
+        print(f'Frequency range: \n{self.freqRange} Hz')
+        print()
 
         freqMin, freqMax = self.freqRange
         octave = (channels-0.5)*np.log10(2)/np.log10(freqMax/freqMin)
+        print(f'Octave: \n{octave}')
+        print()
+
+        # Equally spaced center frequencies in logarithmic scale
         self.freqCentr = np.array([freqMin*(2**(ch/octave)) for ch in range(channels)])
+        print(f'Center frequencies: \n{self.freqCentr}')
+        print()
+
+        # width of bands that guarantee the minimum loss in gain of -3dB (0.7 in the plot)
         self.freqPoles = np.array([(freq*(2**(-1/(2*octave))), (freq*(2**(1/(2*octave))))) for freq in self.freqCentr])
+
+        # The stop freq of filter 1 is equal to the start freq of filter 2 and so on
         self.freqPoles[-1, 1] = fs/2*0.99999
+        print(f'Start and stop frequencies \n{self.freqPoles}')
+        print()
 
     def decomposition(self, filterbank):
         self.components = []
@@ -48,6 +69,7 @@ class DataDevice:
 
         self.fs = fs
         self.freqRange = (0.5, np.floor(self.fs/2))
+        print(f'Frequency range: {self.freqRange} Hz')
 
         freqMin, freqMax = self.freqRange
         octave = (channels-0.5)*np.log10(2)/np.log10(freqMax/freqMin)

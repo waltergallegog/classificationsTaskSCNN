@@ -8,7 +8,7 @@ from scipy.signal import butter, gammatone, freqz
 ######################################
 # ##### Sample standardization ##### #
 ######################################
-channels = 16
+channels = 4
 sourceFolder = '../../datasets/FreeSpokenDigits/datasetRaw/'
 sample = DataAudio(f'{sourceFolder}0_jackson_0.wav', channels)
 padding = int((8002-len(sample.data))/2)
@@ -28,43 +28,51 @@ plt.tight_layout()
 # ##### Filter bank ##### #
 ###########################
 ##### Butterworth filter banks #####
+
+# use second order butterworth filter as it is also supported by CMSIS
 order = 2
 plt.figure()
 plt.title('Butterworth filter banks')
 butterFilterbank = []
 for fl, fh in sample.freqPoles:
     num, den = butter(N=order, Wn=(fl, fh), btype='band', fs=sample.fs)
+    print(f"Filter for {fl} - {fh} Hz:")
+    print(f"NUM: {num} \nDEM: {den}")
+    print()
     butterFilterbank.append([num, den])
     freq, h = freqz(num, den, worN=20000)
-    plt.plot((sample.fs*0.5/np.pi)*freq, abs(h))
+    plt.semilogx((sample.fs*0.5/np.pi)*freq, abs(h))
+    # plt.plot((sample.fs*0.5/np.pi)*freq, abs(h))
 plt.xlabel('f(Hz)')
 plt.ylabel('Gain')
 
-##### Gammatone filterbank #####
-order = 1
-plt.figure()
-plt.title('Gammatone filter banks')
-gammatoneFilterbank = []
-for f in sample.freqCentr:
-    num, den = gammatone(order=order, freq=f, ftype='fir', fs=sample.fs)
-    gammatoneFilterbank.append([num, den])
-    freq, h = freqz(num, den, worN=20000)
-    plt.plot((sample.fs*0.5/np.pi)*freq, abs(h))
-plt.xlabel('f(Hz)')
-plt.ylabel('Gain')
+
+# ##### Gammatone filterbank #####
+# order = 1
+# plt.figure()
+# plt.title('Gammatone filter banks')
+# gammatoneFilterbank = []
+# for f in sample.freqCentr:
+#     num, den = gammatone(order=order, freq=f, ftype='fir', fs=sample.fs)
+#     gammatoneFilterbank.append([num, den])
+#     freq, h = freqz(num, den, worN=20000)
+#     plt.plot((sample.fs*0.5/np.pi)*freq, abs(h))
+# plt.xlabel('f(Hz)')
+# plt.ylabel('Gain')
 
 
 ####################################################
 # ##### Frequency decomposition and Plotting ##### #
 ####################################################
-##### Spectrogram #####
 sample.decomposition(butterFilterbank)
-sonogram = np.absolute(np.vstack(sample.components))
-plt.figure()
-plt.title('Spectrogram with Butterworth filterbank')
-plt.imshow(sonogram, aspect='auto', vmax=int(sonogram.max()/10))
-plt.xlabel('Time')
-plt.ylabel('Channels')
+
+##### Spectrogram #####
+# sonogram = np.absolute(np.vstack(sample.components))
+# plt.figure()
+# plt.title('Spectrogram with Butterworth filterbank')
+# plt.imshow(sonogram, aspect='auto', vmax=int(sonogram.max()/10))
+# plt.xlabel('Time')
+# plt.ylabel('Channels')
 
 ##### Frequency components #####
 for i in range(channels):
